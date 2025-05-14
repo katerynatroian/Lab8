@@ -1,44 +1,37 @@
-import { MagneticEnergy } from './magnetic-energy';
+import { MagneticEnergy } from "./magnetic-energy";
 
-describe('Тестування Магнітної Енергії', () => {
-    let energy: MagneticEnergy;
+describe('MagneticEnergy', () => {
+    let magneticEnergy: MagneticEnergy;
 
     beforeEach(() => {
-        energy = new MagneticEnergy();
+        magneticEnergy = new MagneticEnergy();
     });
 
-    it('має правильно заряджатися і збільшувати рівень заряду', () => {
-        energy.charge();
-        expect(energy['chargeLevel']).toBe(7);
+    test('початковий стан полярності має бути "positive"', () => {
+        expect(magneticEnergy['polarity']).toBe('positive');
     });
 
-    it('має вивільняти імпульс і скидати рівень заряду', () => {
-        energy.charge();
-        energy.release();
-        expect(energy['chargeLevel']).toBe(0);
+    test('метод specialAbility має змінювати полярність', () => {
+        const initialPolarity = magneticEnergy['polarity'];
+        magneticEnergy.specialAbility();
+        expect(magneticEnergy['polarity']).toBe(initialPolarity === 'positive' ? 'negative' : 'positive');
     });
 
-    it('має отримувати шкоду і зменшувати рівень заряду', () => {
-        energy.charge();
-        energy.takeDamage(3);
-        expect(energy['chargeLevel']).toBe(4);
+    test('метод specialAbility має виводити правильне повідомлення', () => {
+        const consoleSpy = jest.spyOn(console, 'log');
+        magneticEnergy.specialAbility();
+        expect(consoleSpy).toHaveBeenCalledWith('Магнітна енергія змінює полярність.');
     });
 
-    it('не має зменшувати рівень заряду нижче 0', () => {
-        energy.takeDamage(100);
-        expect(energy['chargeLevel']).toBe(0);
+    test('метод evolve має збільшувати потужність на 5', () => {
+        const initialPower = magneticEnergy['power'];
+        magneticEnergy.evolve();
+        expect(magneticEnergy['power']).toBe(initialPower + 5);
     });
 
-    it('має змінювати полярність через особливу здатність', () => {
-        expect(energy['polarity']).toBe('positive');
-        energy.specialAbility();
-        expect(energy['polarity']).toBe('negative');
-        energy.specialAbility();
-        expect(energy['polarity']).toBe('positive');
-    });
-
-    it('має еволюціонувати і збільшувати заряд', () => {
-        energy.evolve();
-        expect(energy['chargeLevel']).toBe(5);
+    test('метод evolve має виводити правильне повідомлення', () => {
+        const consoleSpy = jest.spyOn(console, 'log');
+        magneticEnergy.evolve();
+        expect(consoleSpy).toHaveBeenCalledWith('Магнітна енергія коливається між двома станами.');
     });
 });

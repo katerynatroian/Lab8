@@ -1,44 +1,42 @@
-import { DarkEnergy } from './dark-energy';
+import { DarkEnergy } from "./dark-energy";
 
-describe('Тестування Темної Енергії', () => {
-    let energy: DarkEnergy;
+describe('DarkEnergy', () => {
+    let darkEnergy: DarkEnergy;
 
     beforeEach(() => {
-        energy = new DarkEnergy();
+        darkEnergy = new DarkEnergy();
     });
 
-    it('має правильно заряджатися', () => {
-        energy.charge();
-        energy['charge']();
-        expect(energy['power']).toBe(20);
+    test('початковий стан енергії має бути "нестабільна"', () => {
+        expect(darkEnergy['state']).toBe('нестабільна');
     });
 
-    it('має вивільняти енергію і скидати потужність', () => {
-        energy.charge();
-        energy.release();
-        expect(energy['power']).toBe(0);
+    test('метод specialAbility має збільшувати потужність на 15', () => {
+        const initialPower = darkEnergy['power'];
+        darkEnergy.specialAbility();
+        expect(darkEnergy['power']).toBe(initialPower + 15);
     });
 
-    it('має отримувати шкоду і зменшувати потужність', () => {
-        energy.charge();
-        energy.takeDamage(5);
-        expect(energy['power']).toBe(5);
+    test('метод specialAbility має виводити правильне повідомлення', () => {
+        const consoleSpy = jest.spyOn(console, 'log');
+        darkEnergy.specialAbility();
+        expect(consoleSpy).toHaveBeenCalledWith('Темна енергія поглинає джерела світла поблизу...');
     });
 
-    it('не має опускати потужність нижче 0', () => {
-        energy.takeDamage(100);
-        expect(energy['power']).toBe(0);
+    test('метод evolve має змінювати стан з "нестабільна" на "форма порожнечі"', () => {
+        darkEnergy.evolve();
+        expect(darkEnergy['state']).toBe('форма порожнечі');
     });
 
-    it('має збільшувати потужність через особливу здатність', () => {
-        energy.specialAbility();
-        expect(energy['power']).toBe(15);
+    test('метод evolve має змінювати стан з "форма порожнечі" на "нестабільна"', () => {
+        darkEnergy.evolve(); 
+        darkEnergy.evolve(); 
+        expect(darkEnergy['state']).toBe('нестабільна');
     });
 
-    it('має змінювати стан між "unstable" і "void form"', () => {
-        energy.evolve();
-        expect(energy['state']).toBe('void form');
-        energy.evolve();
-        expect(energy['state']).toBe('unstable');
+    test('метод evolve має виводити правильне повідомлення', () => {
+        const consoleSpy = jest.spyOn(console, 'log');
+        darkEnergy.evolve();
+        expect(consoleSpy).toHaveBeenCalledWith('Темна енергія еволюціонувала в: форма порожнечі');
     });
 });

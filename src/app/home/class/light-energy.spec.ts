@@ -1,43 +1,46 @@
-import { LightEnergy } from './light-energy';
+import { LightEnergy } from "./light-energy";
 
-describe('Тестування Світлої Енергії', () => {
-    let energy: LightEnergy;
+describe('LightEnergy', () => {
+    let lightEnergy: LightEnergy;
 
     beforeEach(() => {
-        energy = new LightEnergy();
+        lightEnergy = new LightEnergy();
     });
 
-    it('має правильно заряджатися і збільшувати інтенсивність', () => {
-        energy.charge();
-        expect(energy['intensity']).toBe(10);
+    test('початкова потужність має бути 5', () => {
+        expect(lightEnergy['power']).toBe(5);
     });
 
-    it('має вивільняти енергію і скидати інтенсивність', () => {
-        energy.charge();
-        energy.release();
-        expect(energy['intensity']).toBe(0);
+    test('початковий стан форми має бути "промінь"', () => {
+        expect(lightEnergy['form']).toBe('промінь');
     });
 
-    it('має отримувати шкоду і зменшувати інтенсивність', () => {
-        energy.charge();
-        energy.takeDamage(3);
-        expect(energy['intensity']).toBe(7);
+    test('метод specialAbility має збільшувати потужність на 3', () => {
+        const initialPower = lightEnergy['power'];
+        lightEnergy.specialAbility();
+        expect(lightEnergy['power']).toBe(initialPower + 3);
     });
 
-    it('не має опускати інтенсивність нижче 0', () => {
-        energy.takeDamage(100);
-        expect(energy['intensity']).toBe(0);
+    test('метод specialAbility має виводити правильне повідомлення', () => {
+        const consoleSpy = jest.spyOn(console, 'log');
+        lightEnergy.specialAbility();
+        expect(consoleSpy).toHaveBeenCalledWith('Світлова енергія лікує найближчих союзників.');
     });
 
-    it('має лікувати через особливу здатність', () => {
-        energy.specialAbility();
-        expect(energy['intensity']).toBe(8);
+    test('метод evolve має змінювати стан з "промінь" на "пульс"', () => {
+        lightEnergy.evolve();
+        expect(lightEnergy['form']).toBe('пульс');
     });
 
-    it('має змінювати форму між "beam" і "pulse"', () => {
-        energy.evolve();
-        expect(energy['form']).toBe('pulse');
-        energy.evolve();
-        expect(energy['form']).toBe('beam');
+    test('метод evolve має змінювати стан з "пульс" на "промінь"', () => {
+        lightEnergy.evolve();
+        lightEnergy.evolve();
+        expect(lightEnergy['form']).toBe('промінь');
+    });
+
+    test('метод evolve має виводити правильне повідомлення', () => {
+        const consoleSpy = jest.spyOn(console, 'log');
+        lightEnergy.evolve();
+        expect(consoleSpy).toHaveBeenCalledWith('Світлова енергія еволюціонувала в: пульс');
     });
 });
